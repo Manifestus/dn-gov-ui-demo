@@ -27,7 +27,7 @@ interface CustomerEditFormProps {}
 
 export const CustomerAddForm: FC<CustomerEditFormProps> = (props) => {
   const { ...other } = props;
-  const baseURL = "https://dn-gov-api-5ywbgrw4ia-uc.a.run.app";
+  const baseURL = "https://dn-gov-api-demo-5ywbgrw4ia-uc.a.run.app";
   const PeopleService = peopleService.getInstance(baseURL);
   const formik = useFormik({
     initialValues: {

@@ -53,7 +53,7 @@ export const FileDropzone: FC<FileDropzoneProps> = (props) => {
   const hasAnyFiles = files.length > 0;
 
   const baseURL =
-    "https://dn-gov-api-5ywbgrw4ia-uc.a.run.app";
+    "https://dn-gov-api-demo-5ywbgrw4ia-uc.a.run.app";
   const UploadService = new uploadBucketService(baseURL);
 
   const handleSubmit = useCallback((): void => {

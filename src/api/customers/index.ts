@@ -43,7 +43,7 @@ type GetCustomerLogsRequest = {};
 type GetCustomerLogsResponse = Promise<CustomerLog[]>;
 
 const customerService = new peopleService(
-  "https://dn-gov-api-5ywbgrw4ia-uc.a.run.app/"
+  "https://dn-gov-api-demo-5ywbgrw4ia-uc.a.run.app/"
 );
 
 class CustomersApi {

@@ -4,7 +4,7 @@ import { houseService } from "../House.service";
 import { Houses } from "src/types/house";
 
 const baseURL =
-  "https://dn-gov-api-5ywbgrw4ia-uc.a.run.app/";
+  "https://dn-gov-api-demo-5ywbgrw4ia-uc.a.run.app/";
 const HouseService = houseService.getInstance(baseURL);
 
 export function HouseQuery() {

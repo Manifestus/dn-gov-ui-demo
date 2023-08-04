@@ -36,7 +36,7 @@ interface IProps {
  * @function @PropertyHookForm
  **/
 
-const baseURL = "https://dn-gov-api-5ywbgrw4ia-uc.a.run.app";
+const baseURL = "https://dn-gov-api-demo-5ywbgrw4ia-uc.a.run.app";
 const photoBaseURL =
   "https://storage.cloud.google.com/dn-gov-perulapia-bucket/propertyphoto/";
 const HouseService = houseService.getInstance(baseURL);

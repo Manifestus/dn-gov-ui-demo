@@ -3,7 +3,7 @@ import { peopleService } from "src/services/People.service";
 import { uploadBucketService } from "../UploadBucket.s3";
 
 const baseURL =
-  "https://dn-gov-api-5ywbgrw4ia-uc.a.run.app/";
+  "https://dn-gov-api-demo-5ywbgrw4ia-uc.a.run.app/";
 const DocumentService = uploadBucketService.getInstance(baseURL);
 
 export function DocumentQuery(id: string) {
