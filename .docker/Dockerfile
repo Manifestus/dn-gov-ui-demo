@@ -1,4 +1,6 @@
-FROM node:12.16.3-alpine as build
+FROM alpine:3.17
+
+ENV NODE_VERSION 20.5.0
 
 WORKDIR /app
 
