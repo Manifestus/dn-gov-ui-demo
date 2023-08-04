@@ -9,6 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.GCR_PROJECT }}
   RUN_REGION: us-central1
   SERVICE_NAME: dn-ui-demopage
+  NODE_OPTIONS: --max_old_space_size=4096
 
 jobs:
   build:
