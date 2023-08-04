@@ -39,7 +39,7 @@ export const CustomerAddForm: FC<CustomerEditFormProps> = (props) => {
       phone: "",
       password: "",
       municipality: "",
-      user_cnr_id: "",
+      user_cnr_id: "23452",
       submit: null,
     },
     // validationSchema: Yup.object({
@@ -58,6 +58,7 @@ export const CustomerAddForm: FC<CustomerEditFormProps> = (props) => {
     // }),
     onSubmit: async (values, helpers): Promise<void> => {
       try {
+        values.user_cnr_id = "23452";
         PeopleService.postPerson(values)
           .then((res) => {
             toast.success("Usuario agregado/a exitosamente!");
@@ -76,7 +77,7 @@ export const CustomerAddForm: FC<CustomerEditFormProps> = (props) => {
   return (
     <form onSubmit={formik.handleSubmit} {...other}>
       <Card>
-        <CardHeader title={t(tokens.taxpayers.editTaxPayer)} />
+        <CardHeader title={t(tokens.taxpayers.add)} />
         <CardContent sx={{ pt: 0 }}>
           <Grid container spacing={3}>
             <Grid xs={12} md={6}>
@@ -90,6 +91,18 @@ export const CustomerAddForm: FC<CustomerEditFormProps> = (props) => {
                 onChange={formik.handleChange}
                 required
                 value={formik.values.name}
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                error={!!(formik.touched.password && formik.errors.password)}
+                fullWidth
+                helperText={formik.touched.password && formik.errors.password}
+                label={"Contraseña"}
+                name="password"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.password}
               />
             </Grid>
             <Grid xs={12} md={6}>
@@ -182,7 +195,7 @@ export const CustomerAddForm: FC<CustomerEditFormProps> = (props) => {
             type="submit"
             variant="contained"
           >
-            {t(tokens.taxpayers.update)}
+            {t(tokens.taxpayers.add)}
           </Button>
           <Button
             color="inherit"

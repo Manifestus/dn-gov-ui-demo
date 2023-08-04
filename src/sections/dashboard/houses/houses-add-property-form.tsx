@@ -522,6 +522,12 @@ export const PropertyHookForm: FC<IProps> = (props) => {
             >
               {t(tokens.property.property_picture)}
             </Button>
+            <Button
+              variant="contained"
+              color="primary"
+            >
+              {"Tokenizar"}
+            </Button>
             <Button type="submit" variant="contained">
               {house ? t(tokens.taxpayers.edit) : t(tokens.taxpayers.add)}
             </Button>

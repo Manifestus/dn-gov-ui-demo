@@ -87,7 +87,7 @@ export const CustomerList: FC<IProps> = (props) => {
               <TableCell>
                 <IconButton
                   onClick={() => {
-                    navigate(paths.dashboard.customers.edit, {
+                    navigate(paths.dashboard.customers.add, {
                       state: { customer: customer },
                     });
                   }}
