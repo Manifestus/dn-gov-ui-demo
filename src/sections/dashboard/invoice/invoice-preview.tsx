@@ -53,7 +53,7 @@ export const InvoicePreview: FC<InvoicePreviewProps> = (props) => {
             <Logo />
           </Box>
           <Typography variant="subtitle2">
-            www.devias.io
+            Delnorte Holdings Inc.
           </Typography>
         </div>
         <div>
@@ -108,7 +108,7 @@ export const InvoicePreview: FC<InvoicePreviewProps> = (props) => {
               align="right"
               variant="body2"
             >
-              accounts@devias.io
+              delnorte.io
               <br />
               (+40) 652 3456 23
             </Typography>

@@ -151,7 +151,7 @@ export const InvoicePdfDocument: FC<InvoicePdfDocumentProps> = (props) => {
               style={styles.brand}
             />
             <Text style={styles.h6}>
-              www.devias.io
+              Delnorte Holdings Inc.
             </Text>
           </View>
           <View>
@@ -185,7 +185,7 @@ export const InvoicePdfDocument: FC<InvoicePdfDocumentProps> = (props) => {
           </View>
           <View>
             <Text style={styles.body2}>
-              accounts@devias.io
+              delnorte.io
             </Text>
             <Text style={styles.body2}>
               (+40) 652 3456 23
