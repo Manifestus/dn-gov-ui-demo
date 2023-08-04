@@ -9,6 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.GCR_PROJECT }}
   RUN_REGION: us-central2
   SERVICE_NAME: delnorte-github-ui-demo
+  NODE_OPTIONS: "--max_old_space_size=4096"
 
 jobs:
   build:
