@@ -43,7 +43,7 @@ export class invoiceService extends HttpService {
    */
   postInvoice = async (invoiceData: any) =>
     await this._axios
-      .post("", invoiceData)
+      .post("invoice", invoiceData)
       .then(this.handleResponse)
       .catch(this.handleError);
 

@@ -13,6 +13,7 @@ import type { NavColor } from 'src/types/settings';
 import type { Section } from '../config';
 import { TenantSwitch } from '../tenant-switch';
 import { SideNavSection } from './side-nav-section';
+import { LogoSBP } from 'src/components/logos/logo-sbp';
 
 const SIDE_NAV_WIDTH: number = 280;
 
@@ -206,7 +207,7 @@ export const SideNav: FC<SideNavProps> = (props) => {
                 width: 40
               }}
             >
-              <Logo />
+              <LogoSBP />
             </Box>
             <TenantSwitch sx={{ flexGrow: 1 }} />
           </Stack>

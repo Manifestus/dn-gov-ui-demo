@@ -16,6 +16,7 @@ import type { Section } from '../config';
 import { LanguageSwitch } from '../language-switch';
 import { TenantSwitch } from '../tenant-switch';
 import { TopNavSection } from './top-nav-section';
+import { LogoSBP } from 'src/components/logos/logo-sbp';
 
 const useCssVars = (color: NavColor): Record<string, string> => {
   const theme = useTheme();
@@ -214,7 +215,7 @@ export const TopNav: FC<TopNavProps> = (props) => {
               width: 40
             }}
           >
-            <Logo />
+            <LogoSBP />
           </Box>
           <TenantSwitch />
         </Stack>

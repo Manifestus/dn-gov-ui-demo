@@ -13,6 +13,7 @@ import type { NavColor } from "src/types/settings";
 import type { Section } from "../config";
 import { TenantSwitch } from "../tenant-switch";
 import { MobileNavSection } from "./mobile-nav-section";
+import { LogoSBP } from "src/components/logos/logo-sbp";
 
 const MOBILE_NAV_WIDTH: number = 280;
 
@@ -158,7 +159,7 @@ export const MobileNav: FC<MobileNavProps> = (props) => {
                 width: 40,
               }}
             >
-              <Logo />
+              <LogoSBP />
             </Box>
             <TenantSwitch sx={{ flexGrow: 1 }} />
           </Stack>

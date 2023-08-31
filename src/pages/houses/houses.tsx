@@ -25,8 +25,6 @@ import { HouseQuery } from "src/services/query/HouseQuery";
 import SearchMdIcon from "@untitled-ui/icons-react/build/esm/SearchMd";
 import Fuse from "fuse.js";
 import { HouseList } from "src/sections/dashboard/houses/house-list";
-import { houses2 } from "src/api/houses/data2";
-import { deepCopy } from "src/utils/deep-copy";
 
 const Page: PageType = () => {
   const settings = useSettings();
@@ -49,6 +47,7 @@ const Page: PageType = () => {
     useState<string>("");
   const [storedOwnerFNMunicipality, setStoredOwnerFNMunicipality] = useState<string>("");
   // const [storedOwnerLSMunicipality, setStoredOwnerLSMunicipality] = useState<string>("");
+
 
   const fuse = useMemo(
     () =>

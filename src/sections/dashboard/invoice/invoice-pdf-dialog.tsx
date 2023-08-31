@@ -47,7 +47,7 @@ export const InvoicePdfDialog: FC<InvoicePdfDialogProps> = (props) => {
             )}
             onClick={onClose}
           >
-            Close
+            Cerrar
           </Button>
         </Box>
         <Box sx={{ flexGrow: 1 }}>

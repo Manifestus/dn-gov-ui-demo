@@ -22,161 +22,224 @@ import { wait } from "src/utils/wait";
 import { t } from "i18next";
 import { tokens } from "src/locales/tokens";
 import { peopleService } from "src/services/People.service";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
-interface CustomerEditFormProps {}
+interface CustomerEditFormProps {
+  user?: Customer;
+}
 
 export const CustomerAddForm: FC<CustomerEditFormProps> = (props) => {
-  const { ...other } = props;
+  const { user } = props;
   const baseURL = "https://dn-gov-api-demo-5ywbgrw4ia-uc.a.run.app";
   const PeopleService = peopleService.getInstance(baseURL);
-  const formik = useFormik({
-    initialValues: {
-      address: "",
-      address2: "",
-      country: "",
-      email: "",
-      name: "",
-      phone: "",
-      password: "",
-      municipality: "",
-      user_cnr_id: "23452",
-      submit: null,
-    },
-    // validationSchema: Yup.object({
-    //   address1: Yup.string().max(255),
-    //   address2: Yup.string().max(255),
-    //   country: Yup.string().max(255),
-    //   state: Yup.string().max(255),
-    //   email: Yup.string()
-    //     .email("Must be a valid email")
-    //     .max(255)
-    //     .required("Email is required"),
-    //   hasDiscount: Yup.bool(),
-    //   isVerified: Yup.bool(),
-    //   name: Yup.string().max(255).required("Name is required"),
-    //   phone: Yup.string().max(15),
-    // }),
-    onSubmit: async (values, helpers): Promise<void> => {
-      try {
-        values.user_cnr_id = "23452";
-        PeopleService.postPerson(values)
-          .then((res) => {
-            toast.success("Usuario agregado/a exitosamente!");
-          })
-          .catch((err) => {
-            toast.error("Usuario no fue registrada! error: ", err);
-          });
-        await wait(2000);
-      } catch (err) {
-        console.error(err);
-        toast.error("Something went wrong!");
-      }
-    },
-  });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Customer>();
+  console.log(new Date().getDate())
+  const nav = useNavigate();
+  const onSubmit = async (values: any) => {
+    values.id = user?.id;
+    try {
+      user
+        ? PeopleService.patchPerson(values.id, values)
+        : PeopleService.postPerson(values)
+            .then(() => {
+              user
+                ? toast.success("Usuario editado/a exitosamente!")
+                : toast.success("Usuario agregado/a exitosamente!");
+            })
+            .catch((err) => {
+              user
+                ? toast.error("Usuario no fue editado/a! error: ", err)
+                : toast.error("Usuario no fue registrada! error: ", err);
+            });
+      await wait(2000);
+      nav(paths.dashboard.customers.index);
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong!");
+    }
+  };
 
   return (
-    <form onSubmit={formik.handleSubmit} {...other}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Card>
-        <CardHeader title={t(tokens.taxpayers.add)} />
+        {user ? (
+          <CardHeader title={t(tokens.taxpayers.editTaxPayer)} />
+        ) : (
+          <CardHeader title={t(tokens.taxpayers.addTaxPayer)} />
+        )}
         <CardContent sx={{ pt: 0 }}>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{ p: 2 }}>
             <Grid xs={12} md={6}>
               <TextField
-                error={!!(formik.touched.name && formik.errors.name)}
                 fullWidth
-                helperText={formik.touched.name && formik.errors.name}
                 label={t(tokens.taxpayers.fullName)}
-                name="name"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
+                defaultValue={user?.name}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("name", {
+                  required: `El Nombre es un requisito!`,
+                })}
                 required
-                value={formik.values.name}
               />
             </Grid>
             <Grid xs={12} md={6}>
               <TextField
-                error={!!(formik.touched.password && formik.errors.password)}
                 fullWidth
-                helperText={formik.touched.password && formik.errors.password}
-                label={"Contraseña"}
-                name="password"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.password}
+                label={t(tokens.taxpayers.user_cnr_id)}
+                defaultValue={user?.user_cnr_id}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("user_cnr_id", {
+                  required: `El CNR es un requisito!`,
+                })}
+                required
               />
             </Grid>
             <Grid xs={12} md={6}>
               <TextField
-                error={!!(formik.touched.email && formik.errors.email)}
                 fullWidth
-                helperText={formik.touched.email && formik.errors.email}
                 label={t(tokens.taxpayers.email)}
-                name="email"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
+                defaultValue={user?.email}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("email", {
+                  required: `El Correo es un requisito!`,
+                })}
                 required
-                value={formik.values.email}
               />
             </Grid>
             <Grid xs={12} md={6}>
               <TextField
-                error={!!(formik.touched.country && formik.errors.country)}
                 fullWidth
-                helperText={formik.touched.country && formik.errors.country}
+                label={t(tokens.taxpayers.password)}
+                defaultValue={user?.password}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("password", {
+                  required: `La Contraseña es un requisito!`,
+                })}
+                required
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
                 label={t(tokens.taxpayers.country)}
-                name="country"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.country}
-              />
-            </Grid>
-            <Grid xs={12} md={6}>
-              <TextField
-                error={!!(formik.touched.municipality && formik.errors.municipality)}
-                fullWidth
-                helperText={formik.touched.municipality && formik.errors.municipality}
-                label={t(tokens.taxpayers.municipality)}
-                name="municipality"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
+                defaultValue={user?.country}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("country", {
+                  required: `El País es un requisito!`,
+                })}
                 required
-                value={formik.values.municipality}
               />
             </Grid>
             <Grid xs={12} md={6}>
               <TextField
-                error={!!(formik.touched.address && formik.errors.address)}
                 fullWidth
-                helperText={formik.touched.address && formik.errors.address}
+                label={t(tokens.taxpayers.municipality)}
+                defaultValue={user?.municipality}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("municipality", {
+                  required: `El Municipio es un requisito!`,
+                })}
+                required
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
                 label={t(tokens.taxpayers.address1)}
-                name="address1"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.address}
+                defaultValue={user?.address}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("address", {
+                  required: `La Dirección es un requisito!`,
+                })}
+                required
               />
             </Grid>
             <Grid xs={12} md={6}>
               <TextField
-                error={!!(formik.touched.address2 && formik.errors.address2)}
                 fullWidth
-                helperText={formik.touched.address2 && formik.errors.address2}
                 label={t(tokens.taxpayers.address2)}
-                name="address2"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.address2}
+                defaultValue={user?.address2}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("address", {
+                  required: `La Dirección Adicional es un requisito!`,
+                })}
               />
             </Grid>
             <Grid xs={12} md={6}>
               <TextField
-                error={!!(formik.touched.phone && formik.errors.phone)}
                 fullWidth
-                helperText={formik.touched.phone && formik.errors.phone}
                 label={t(tokens.taxpayers.phone)}
-                name="phone"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.phone}
+                defaultValue={user?.phone}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("phone", {
+                  required: `El Teléfono personal es un requisito!`,
+                })}
+                required
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label={t(tokens.taxpayers.token)}
+                defaultValue={user?.token}
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bottom: "0px",
+                }}
+                {...register("token")}
+                name="token"
               />
             </Grid>
           </Grid>
@@ -190,17 +253,12 @@ export const CustomerAddForm: FC<CustomerEditFormProps> = (props) => {
           spacing={3}
           sx={{ p: 3 }}
         >
-          <Button
-            disabled={formik.isSubmitting}
-            type="submit"
-            variant="contained"
-          >
-            {t(tokens.taxpayers.add)}
+          <Button type="submit" variant="contained">
+            {user ? t(tokens.taxpayers.update) : t(tokens.taxpayers.add)}
           </Button>
           <Button
             color="inherit"
             component={RouterLink}
-            disabled={formik.isSubmitting}
             href={paths.dashboard.customers.index}
           >
             {t(tokens.taxpayers.cancel)}

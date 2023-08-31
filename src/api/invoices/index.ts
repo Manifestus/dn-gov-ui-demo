@@ -74,11 +74,11 @@ class InvoicesApi {
           typeof filters.customers !== "undefined" &&
           filters.customers.length > 0
         ) {
-          const matched = filters.customers.includes(invoice.id);
+          // const matched = filters.customers.includes(invoice.id);
 
-          if (!matched) {
-            return false;
-          }
+          // if (!matched) {
+          //   return false;
+          // }
         }
 
         if (typeof filters.status !== "undefined") {

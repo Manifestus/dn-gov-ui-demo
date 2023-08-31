@@ -29,14 +29,10 @@ import { CustomerDataManagement } from "src/sections/dashboard/customer/customer
 import { CustomerEmailsSummary } from "src/sections/dashboard/customer/customer-emails-summary";
 import { CustomerInvoices } from "src/sections/dashboard/customer/customer-invoices";
 import { CustomerPayment } from "src/sections/dashboard/customer/customer-payment";
-import { CustomerLogs } from "src/sections/dashboard/customer/customer-logs";
-import type { Customer } from "src/types/customer";
-import { CustomerInvoice, CustomerLog } from "src/types/customer";
+import { Customer, CustomerInvoice, CustomerLog } from "src/types/customer";
 import type { Page as PageType } from "src/types/page";
-import { getInitials } from "src/utils/get-initials";
 import { t } from "i18next";
 import { tokens } from "src/locales/tokens";
-import { CustomersQuery } from "src/services/query/CustomerQuery";
 import { useLocation, useNavigate } from "react-router";
 
 const tabs = [
@@ -103,7 +99,12 @@ const Page: PageType = () => {
   const navigate = useNavigate();
   const invoices = useInvoices();
   const logs = useLogs();
+  let cx: Customer = { id: "", name: "", email: "", phone: "", municipality: "", address: "", address2: "", country: "", user_cnr_id: ""};
 
+  if (customer) {
+    cx = customer;
+  }
+  
   usePageView();
 
   const handleTabsChange = useCallback(
@@ -231,16 +232,16 @@ const Page: PageType = () => {
                   </Grid>
                   <Grid xs={12} lg={8}>
                     <Stack spacing={4}>
-                      <CustomerPayment />
-                      {/* <CustomerEmailsSummary />
-                      <CustomerDataManagement /> */}
+                      <CustomerPayment user={cx}/>
+                      <CustomerEmailsSummary />
+                      {/* <CustomerDataManagement /> */}
                     </Stack>
                   </Grid>
                 </Grid>
               </div>
             )}
             {currentTab === "invoices" && (
-              <CustomerInvoices invoices={invoices} id={customer.id}/>
+              <CustomerInvoices invoices={invoices} id={customer.id} />
             )}
           </Stack>
         </Container>

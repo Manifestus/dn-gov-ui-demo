@@ -33,14 +33,14 @@ export interface Customer {
   country: string;
   municipality: string;
   address: string;
-  address2: string;
+  address2?: string;
   phone: string;
   password?: string;
   token?: string;
   invoices?: Invoice[];
   documents?: string[];
-  createdAt: number;
-  updatedAt: number;
+  createdAt?: number;
+  updatedAt?: number;
   properties?: string[];
   history?: string[];
 }

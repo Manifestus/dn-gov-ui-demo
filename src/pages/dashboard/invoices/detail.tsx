@@ -12,7 +12,6 @@ import {
   SvgIcon,
   Typography
 } from '@mui/material';
-import { invoicesApi } from 'src/api/invoices';
 import { RouterLink } from 'src/components/router-link';
 import { Seo } from 'src/components/seo';
 import { useDialog } from 'src/hooks/use-dialog';
@@ -25,36 +24,11 @@ import { InvoicePreview } from 'src/sections/dashboard/invoice/invoice-preview';
 import type { Invoice } from 'src/types/invoice';
 import type { Page as PageType } from 'src/types/page';
 import { getInitials } from 'src/utils/get-initials';
-
-const useInvoice = (): Invoice | null => {
-  const isMounted = useMounted();
-  const [invoice, setInvoice] = useState<Invoice | null>(null);
-
-  const handleInvoiceGet = useCallback(async () => {
-    try {
-      const response = await invoicesApi.getInvoice();
-
-      if (isMounted()) {
-        setInvoice(response);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
-
-  useEffect(
-    () => {
-      handleInvoiceGet();
-    },
-    // eslint-disable-next-line 
-    []
-  );
-
-  return invoice;
-};
+import { useLocation } from 'react-router';
 
 const Page: PageType = () => {
-  const invoice = useInvoice();
+  const { state } = useLocation();
+  const { invoice } = state;
   const dialog = useDialog();
 
   usePageView();
@@ -65,7 +39,7 @@ const Page: PageType = () => {
 
   return (
     <>
-      <Seo title="Dashboard: Invoice Details" />
+      <Seo title="Dashboard: Detalles de Facturacion" />
       <Box
         component="main"
         sx={{
@@ -94,7 +68,7 @@ const Page: PageType = () => {
                     <ArrowLeftIcon />
                   </SvgIcon>
                   <Typography variant="subtitle2">
-                    Invoices
+                    Facturas
                   </Typography>
                 </Link>
               </div>
@@ -119,7 +93,7 @@ const Page: PageType = () => {
                   </Avatar>
                   <div>
                     <Typography variant="h4">
-                      {invoice.number}
+                      {invoice.id}
                     </Typography>
                     <Typography
                       color="text.secondary"
@@ -138,7 +112,7 @@ const Page: PageType = () => {
                     color="inherit"
                     onClick={dialog.handleOpen}
                   >
-                    Preview
+                    Vista
                   </Button>
                   <PDFDownloadLink
                     document={<InvoicePdfDocument invoice={invoice} />}
@@ -149,7 +123,7 @@ const Page: PageType = () => {
                       color="primary"
                       variant="contained"
                     >
-                      Download
+                      Descargar
                     </Button>
                   </PDFDownloadLink>
                 </Stack>

@@ -197,7 +197,7 @@ const Page: PageType = () => {
               >
                 <div>
                   <Typography variant="h4">
-                    Invoices
+                    Facturas
                   </Typography>
                 </div>
                 <Stack
@@ -214,7 +214,7 @@ const Page: PageType = () => {
                     )}
                     onClick={handleFiltersToggle}
                   >
-                    Filters
+                    Filtros
                   </Button>
                   <Button
                     startIcon={(

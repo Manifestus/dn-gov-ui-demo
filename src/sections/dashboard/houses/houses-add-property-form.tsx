@@ -76,7 +76,7 @@ export const PropertyHookForm: FC<IProps> = (props) => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Card>
-            {props.house ? (
+            {house ? (
               <CardHeader title={t(tokens.taxpayers.edit)} />
             ) : (
               <CardHeader title={t(tokens.taxpayers.add)} />
@@ -521,12 +521,6 @@ export const PropertyHookForm: FC<IProps> = (props) => {
               onClick={uploadDialog.handleOpen}
             >
               {t(tokens.property.property_picture)}
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-            >
-              {"Tokenizar"}
             </Button>
             <Button type="submit" variant="contained">
               {house ? t(tokens.taxpayers.edit) : t(tokens.taxpayers.add)}

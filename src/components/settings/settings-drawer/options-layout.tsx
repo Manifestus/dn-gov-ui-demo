@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, Stack, Typography } from '@mui/material';
 import type { Layout } from 'src/types/settings';
 import { Logo } from '../../logo';
+import { LogoSBP } from 'src/components/logos/logo-sbp';
 
 interface Option {
   label: string;
@@ -40,7 +41,7 @@ const options: Option[] = [
                 width: 12
               }}
             >
-              <Logo />
+              <LogoSBP />
             </Box>
             <Box
               sx={{

@@ -1,7 +1,7 @@
-import { useState, type FC, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { format } from 'date-fns';
-import ArrowRightIcon from '@untitled-ui/icons-react/build/esm/ArrowRight';
+import { useState, type FC, useEffect } from "react";
+import PropTypes from "prop-types";
+import { format } from "date-fns";
+import ArrowRightIcon from "@untitled-ui/icons-react/build/esm/ArrowRight";
 import {
   Card,
   CardHeader,
@@ -12,16 +12,18 @@ import {
   TableCell,
   TableHead,
   TablePagination,
-  TableRow
-} from '@mui/material';
-import { MoreMenu } from 'src/components/more-menu';
-import { RouterLink } from 'src/components/router-link';
-import { Scrollbar } from 'src/components/scrollbar';
-import { SeverityPill } from 'src/components/severity-pill';
-import { paths } from 'src/paths';
-import type { CustomerInvoice } from 'src/types/customer';
-import { InvoiceQuery } from 'src/services/query/InvoiceQuery';
-import { Invoice } from 'src/types/invoice';
+  TableRow,
+} from "@mui/material";
+import { MoreMenu } from "src/components/more-menu";
+import { RouterLink } from "src/components/router-link";
+import { Scrollbar } from "src/components/scrollbar";
+import { SeverityPill } from "src/components/severity-pill";
+import { paths } from "src/paths";
+import type { CustomerInvoice } from "src/types/customer";
+import { InvoiceQuery } from "src/services/query/InvoiceQuery";
+import { Invoice } from "src/types/invoice";
+import { useNavigate } from "react-router";
+import { Houses } from "src/types/house";
 
 interface CustomerInvoicesProps {
   invoices?: CustomerInvoice[];
@@ -30,60 +32,45 @@ interface CustomerInvoicesProps {
 
 export const CustomerInvoices: FC<CustomerInvoicesProps> = (props) => {
   const { invoices = [], id, ...other } = props;
-  // const [parsedData, setParsedData] = useState<Invoice>();
-  // const { data, isSuccess } = InvoiceQuery(id);
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     if (data && data.length > 0) {
-  //       setParsedData(JSON.parse(data));
-  //     }
-  //   }
-  // }, [isSuccess, data]);
+  const [parsedData, setParsedData] = useState<Invoice[]>();
+  const navigate = useNavigate();
+  const { data, isSuccess } = InvoiceQuery(id);
+  useEffect(() => {
+    if (isSuccess) {
+      if (data && data.length > 0) {
+        setParsedData(JSON.parse(data));
+      }
+    }
+  }, [isSuccess, data]);
 
   return (
     <Card {...other}>
-      <CardHeader
-        action={<MoreMenu />}
-        title="Recent Invoices"
-      />
+      <CardHeader action={<MoreMenu />} title="Recent Invoices" />
       <Scrollbar>
         <Table sx={{ minWidth: 600 }}>
           <TableHead>
             <TableRow>
-              <TableCell>
-                ID
-              </TableCell>
-              <TableCell>
-                Date
-              </TableCell>
-              <TableCell>
-                Total
-              </TableCell>
-              <TableCell>
-                Status
-              </TableCell>
-              <TableCell align="right">
-                Actions
-              </TableCell>
+              <TableCell>ID</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Total</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {invoices.map((invoice) => {
-              const issueDate = format(invoice.issueDate, 'MMM dd,yyyy');
-              const statusColor = invoice.status === 'paid' ? 'success' : 'error';
+            {parsedData?.map((invoice) => {
+              const issueDate =
+                invoice && invoice.issueDate
+                  ? format(new Date(invoice.issueDate), "MMM dd,yyyy")
+                  : "";
+              const statusColor =
+                invoice.status === "paid" ? "success" : "error";
 
               return (
                 <TableRow key={invoice.id}>
-                  <TableCell>
-                    #
-                    {invoice.id}
-                  </TableCell>
-                  <TableCell>
-                    {issueDate}
-                  </TableCell>
-                  <TableCell>
-                    {invoice.amount}
-                  </TableCell>
+                  <TableCell>#{invoice.id}</TableCell>
+                  <TableCell>{issueDate}</TableCell>
+                  <TableCell>{invoice.number}</TableCell>
                   <TableCell>
                     <SeverityPill color={statusColor}>
                       {invoice.status}
@@ -91,8 +78,11 @@ export const CustomerInvoices: FC<CustomerInvoicesProps> = (props) => {
                   </TableCell>
                   <TableCell align="right">
                     <IconButton
-                      component={RouterLink}
-                      href={paths.dashboard.invoices.details}
+                      onClick={() => {
+                        navigate(paths.dashboard.invoices.details, {
+                          state: { invoice: invoice },
+                        });
+                      }}
                     >
                       <SvgIcon>
                         <ArrowRightIcon />
@@ -107,7 +97,7 @@ export const CustomerInvoices: FC<CustomerInvoicesProps> = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={invoices.length}
+        count={parsedData?.length ?? 0}
         onPageChange={(): void => {}}
         onRowsPerPageChange={(): void => {}}
         page={0}
@@ -119,5 +109,5 @@ export const CustomerInvoices: FC<CustomerInvoicesProps> = (props) => {
 };
 
 CustomerInvoices.propTypes = {
-  invoices: PropTypes.array
+  invoices: PropTypes.array,
 };

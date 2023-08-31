@@ -52,14 +52,12 @@ export const CustomerList: FC<IProps> = (props) => {
               <TableCell>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <div>
-                    <Link
+                    <Typography
                       color="inherit"
-                      component={RouterLink}
-                      href={paths.dashboard.customers.details}
                       variant="subtitle2"
                     >
                       {customer.name}
-                    </Link>
+                    </Typography>
                     <Typography color="text.secondary" variant="body2">
                       {customer.email}
                     </Typography>
@@ -87,7 +85,7 @@ export const CustomerList: FC<IProps> = (props) => {
               <TableCell>
                 <IconButton
                   onClick={() => {
-                    navigate(paths.dashboard.customers.add, {
+                    navigate(paths.dashboard.customers.edit, {
                       state: { customer: customer },
                     });
                   }}

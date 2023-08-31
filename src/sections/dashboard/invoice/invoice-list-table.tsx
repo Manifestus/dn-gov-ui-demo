@@ -61,7 +61,7 @@ const InvoiceRow: FC<InvoiceRowProps> = (props) => {
 
   const statusColor = statusColorsMap[invoice.status];
   const totalAmount = numeral(invoice.totalAmount).format('0,0.00');
-  const issueDate = invoice.issueDate && format(invoice.issueDate, 'dd/MM/yyyy');
+  const issueDate = invoice.issueDate && format(new Date(invoice.issueDate), 'dd/MM/yyyy');
   const dueDate = invoice.dueDate && format(invoice.dueDate, 'dd/MM/yyyy');
 
   return (

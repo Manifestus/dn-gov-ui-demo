@@ -1,7 +1,7 @@
-import type { FC } from 'react';
-import PropTypes from 'prop-types';
-import { format } from 'date-fns';
-import numeral from 'numeral';
+import type { FC } from "react";
+import PropTypes from "prop-types";
+import { format } from "date-fns";
+import numeral from "numeral";
 import {
   Box,
   Card,
@@ -12,10 +12,15 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Unstable_Grid2 as Grid
-} from '@mui/material';
-import { Logo } from 'src/components/logo';
-import type { Invoice } from 'src/types/invoice';
+  Unstable_Grid2 as Grid,
+} from "@mui/material";
+import { Logo } from "src/components/logo";
+import type { Invoice } from "src/types/invoice";
+import { Houses } from "src/types/house";
+import { houseService } from "src/services/House.service";
+import { Transaction } from "src/types/transaction";
+import { Customer } from "src/types/customer";
+import { LogoSBP } from "src/components/logos/logo-sbp";
 
 interface InvoicePreviewProps {
   invoice: Invoice;
@@ -24,18 +29,26 @@ interface InvoicePreviewProps {
 export const InvoicePreview: FC<InvoicePreviewProps> = (props) => {
   const { invoice, ...other } = props;
 
-  // const items = invoice.items || [];
-  const dueDate = invoice.dueDate && format(invoice.dueDate, 'dd MMM yyyy');
-  const issueDate = invoice.issueDate && format(invoice.issueDate, 'dd MMM yyyy');
-  const subtotalAmount = numeral(invoice.subtotalAmount).format(`${invoice.currency}0,0.00`);
-  const taxAmount = numeral(invoice.taxAmount).format(`${invoice.currency}0,0.00`);
-  const totalAmount = numeral(invoice.totalAmount).format(`${invoice.currency}0,0.00`);
+  const invoiceV2: Invoice = invoice as unknown as Invoice;
+  const property: Houses = invoice.property as unknown as Houses;
+  const user: Customer = invoice.user as unknown as Customer;
+  const transaction: Transaction =
+    invoice.transaction as unknown as Transaction;
+
+  const issueDate =
+    invoice.issueDate && format(new Date(invoice.issueDate), "dd MMM yyyy");
+  const subtotalAmount = numeral(invoiceV2.subtotalAmount).format(
+    `${invoice.currency}0,0.00`
+  );
+  const taxAmount = numeral(invoice.taxAmount).format(
+    `${invoice.currency}0,0.00`
+  );
+  const totalAmount = numeral(invoice.totalAmount).format(
+    `${invoice.currency}0,0.00`
+  );
 
   return (
-    <Card
-      {...other}
-      sx={{ p: 6 }}
-    >
+    <Card {...other} sx={{ p: 6 }}>
       <Stack
         alignItems="flex-start"
         direction="row"
@@ -45,262 +58,183 @@ export const InvoicePreview: FC<InvoicePreviewProps> = (props) => {
         <div>
           <Box
             sx={{
-              display: 'inline-flex',
-              height: 24,
-              width: 24
+              display: "inline-flex",
+              height: 50,
+              width: 80,
             }}
           >
-            <Logo />
+            <LogoSBP />
           </Box>
           <Typography variant="subtitle2">
-            Delnorte Holdings Inc.
+            San Bartolome de Perulapia
           </Typography>
         </div>
         <div>
           <Typography
             align="right"
-            color="success.main"
+            color={invoice.status === "paid" ? "success.main" : "error.main"}
             variant="h4"
           >
-            {invoice.status.toUpperCase()}
+            {invoice.status === "paid" ? "PAGADO" : "CANCELADO"}
           </Typography>
-          <Typography
-            align="right"
-            variant="subtitle2"
-          >
-            {invoice.number}
-          </Typography>
+          <Typography align="right" variant="subtitle2"></Typography>
         </div>
       </Stack>
       <Box sx={{ mt: 4 }}>
-        <Grid
-          container
-          justifyContent="space-between"
-        >
-          <Grid
-            xs={12}
-            md={4}
-          >
+        <Grid container justifyContent="space-between">
+          <Grid xs={12} md={4}>
+            <Typography gutterBottom variant="h5">
+              Propiedad a Pagar
+            </Typography>
             <Typography variant="body2">
-              Street King William, 123
+              {property?.property_address_record?.split(",")[0]}
               <br />
-              Level 2, C, 442456
+              {property?.property_address_record?.split(",")[1]}
               <br />
-              San Francisco, CA, USA
+              {property?.town}
+              <br />
+              {property?.state + ", " + "El Salvador"}
             </Typography>
           </Grid>
           <Grid
+            container
             xs={12}
             md={4}
+            alignItems="center"
+            justifyContent="center"
           >
-            <Typography variant="body2">
-              Company No. 4675933
-              <br />
-              EU VAT No. 949 67545 45
-              <br />
-            </Typography>
+            <Grid>
+              <Typography variant="h6">Numero de Referencia</Typography>
+              <Typography variant="body2">
+                {transaction?.operation_information?.reference}
+              </Typography>
+            </Grid>
+            <Grid>
+              <Box sx={{ mt: 4 }}>
+                <Typography gutterBottom variant="subtitle2">
+                  Dirección de Facturación
+                </Typography>
+                <Typography variant="body2">
+                  {user.address} <br /> {user.municipality} {" , "}{" "}
+                  {user.country}
+                </Typography>
+              </Box>
+            </Grid>
           </Grid>
-          <Grid
-            xs={12}
-            md={4}
-          >
-            <Typography
-              align="right"
-              variant="body2"
-            >
-              delnorte.io
+          <Grid xs={12} md={4} pt={1}>
+            <Typography align="right" variant="h5">
+              Datos del Contribuyente
+            </Typography>
+            <Typography align="right" variant="body2">
+              {user.name}
               <br />
-              (+40) 652 3456 23
+              {user.email}
+              <br />
+              {user.phone}
             </Typography>
           </Grid>
         </Grid>
       </Box>
       <Box sx={{ mt: 4 }}>
-        <Grid
-          container
-          justifyContent="space-between"
-        >
-          <Grid
-            xs={12}
-            md={4}
-          >
-            <Typography
-              gutterBottom
-              variant="subtitle2"
-            >
-              Due date
+        <Grid container justifyContent="space-between">
+          <Grid xs={12} md={4}>
+            <Typography gutterBottom variant="subtitle2">
+              Fecha Transmitida
             </Typography>
-            <Typography variant="body2">
-              {dueDate}
-            </Typography>
+            <Typography variant="body2">{issueDate}</Typography>
           </Grid>
-          <Grid
-            xs={12}
-            md={4}
-          >
-            <Typography
-              gutterBottom
-              variant="subtitle2"
-            >
-              Date of issue
+          <Grid xs={12} md={4}>
+            <Typography gutterBottom variant="h6">
+              Datos de la Tarjeta
             </Typography>
-            <Typography variant="body2">
-              {issueDate}
-            </Typography>
-          </Grid>
-          <Grid
-            xs={12}
-            md={4}
-          >
-            <Typography
-              gutterBottom
-              variant="subtitle2"
-            >
-              Number
-            </Typography>
-            <Typography variant="body2">
-              {invoice.number}
+            <Typography variant="h5">
+              {" **** " + " **** " + transaction.card_information.card_number}
+              <br />
             </Typography>
           </Grid>
         </Grid>
-      </Box>
-      <Box sx={{ mt: 4 }}>
-        <Typography
-          gutterBottom
-          variant="subtitle2"
-        >
-          Billed to
-        </Typography>
-        <Typography variant="body2">
-          {/* {invoice.customer.name}
-          <br />
-          {invoice.customer.company}
-          <br />
-          {invoice.customer.taxId}
-          <br />
-          {invoice.customer.address} */}
-        </Typography>
       </Box>
       <Table sx={{ mt: 4 }}>
         <TableHead>
           <TableRow>
-            <TableCell>
-              #
-            </TableCell>
-            <TableCell>
-              Description
-            </TableCell>
-            <TableCell>
-              Qty
-            </TableCell>
-            <TableCell>
-              Unit Price
-            </TableCell>
-            <TableCell align="right">
-              Total
-            </TableCell>
+            <TableCell>#</TableCell>
+            <TableCell>Descripción</TableCell>
+            <TableCell>Estado</TableCell>
+            <TableCell>Subtotal</TableCell>
+            <TableCell align="right">Total</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* {items?.map((item, index) => {
-            const unitAmount = numeral(item.unitAmount).format(`${item.currency}0,0.00`);
-            const totalAmount = numeral(item.totalAmount).format(`${item.currency}0,0.00`);
+          <TableRow key={"init-row"}>
+            <TableCell>{`Numero de Orden: ${invoice.number}`}</TableCell>
+            <TableCell>
+              <Typography variant="body2">
+                {property?.property_address_record?.split(",")[0]}
+                <br />
+                {property?.property_address_record?.split(",")[1]}
+                <br />
+                {property?.town}
+                <br />
+                {property?.state + ", " + "El Salvador"}
+              </Typography>
+            </TableCell>
+            <TableCell>
+              {invoice.status === "canceled" ? "Cancelado" : "Aprobado"}
+            </TableCell>
+            <TableCell>{invoice.subtotalAmount}</TableCell>
+            <TableCell align="right">{totalAmount}</TableCell>
+          </TableRow>
 
-            return (
-              <TableRow key={item.id}>
-                <TableCell>
-                  {index + 1}
-                </TableCell>
-                <TableCell>
-                  {item.description}
-                </TableCell>
-                <TableCell>
-                  {item.quantity}
-                </TableCell>
-                <TableCell>
-                  {unitAmount}
-                </TableCell>
-                <TableCell align="right">
-                  {totalAmount}
-                </TableCell>
-              </TableRow>
-            );
-          })} */}
           <TableRow>
-            <TableCell
-              colSpan={3}
-              sx={{ borderBottom: 'none' }}
-            />
-            <TableCell sx={{ borderBottom: 'none' }}>
-              <Typography variant="subtitle1">
-                Subtotal
-              </Typography>
+            <TableCell colSpan={3} sx={{ borderBottom: "none" }} />
+            <TableCell sx={{ borderBottom: "none" }}>
+              <Typography variant="subtitle1">Subtotal</Typography>
             </TableCell>
-            <TableCell
-              align="right"
-              sx={{ borderBottom: 'none' }}
-            >
+            <TableCell align="right" sx={{ borderBottom: "none" }}>
               <Typography variant="subtitle2">
-                {subtotalAmount}
+                {"$" + subtotalAmount}
               </Typography>
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell
-              colSpan={3}
-              sx={{ borderBottom: 'none' }}
-            />
-            <TableCell sx={{ borderBottom: 'none' }}>
-              <Typography variant="subtitle1">
-                Taxes
-              </Typography>
+            <TableCell colSpan={3} sx={{ borderBottom: "none" }} />
+            <TableCell sx={{ borderBottom: "none" }}>
+              <Typography variant="subtitle1">Tasa DelNorte</Typography>
             </TableCell>
-            <TableCell
-              align="right"
-              sx={{ borderBottom: 'none' }}
-            >
-              <Typography variant="subtitle2">
-                {taxAmount}
-              </Typography>
+            <TableCell align="right" sx={{ borderBottom: "none" }}>
+              <Typography variant="subtitle2">{taxAmount}</Typography>
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell
-              colSpan={3}
-              sx={{ borderBottom: 'none' }}
-            />
-            <TableCell sx={{ borderBottom: 'none' }}>
-              <Typography variant="subtitle1">
-                Total
-              </Typography>
+            <TableCell colSpan={3} sx={{ borderBottom: "none" }} />
+            <TableCell sx={{ borderBottom: "none" }}>
+              <Typography variant="subtitle1">Total</Typography>
             </TableCell>
-            <TableCell
-              align="right"
-              sx={{ borderBottom: 'none' }}
-            >
-              <Typography variant="subtitle2">
-                {totalAmount}
-              </Typography>
+            <TableCell align="right" sx={{ borderBottom: "none" }}>
+              <Typography variant="subtitle2">{"$" + totalAmount}</Typography>
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
-      <Box sx={{ mt: 2 }}>
-        <Typography
-          gutterBottom
-          variant="h6"
-        >
-          Notes
+
+      <Box display="flex" sx={{ mt: 2 }} justifyContent="space-between">
+        <Typography gutterBottom variant="h6">
+          Notas
         </Typography>
-        <Typography
-          color="text.secondary"
-          variant="body2"
-        >
-          Please make sure you have the right bank registration number
-          as I
-          had issues before and make sure you guys cover transfer
-          expenses.
-        </Typography>
+        <Box display="flex" flexDirection="row" gap="10px">
+          <Typography color="text.secondary" variant="body2">
+            Servicio proporcionado por Delnorte Holdings Inc.
+          </Typography>
+          <Box
+            sx={{
+              display: "inline-flex",
+              height: 24,
+              width: 24,
+            }}
+          >
+            <Logo />
+          </Box>
+        </Box>
       </Box>
     </Card>
   );
@@ -308,5 +242,5 @@ export const InvoicePreview: FC<InvoicePreviewProps> = (props) => {
 
 InvoicePreview.propTypes = {
   // @ts-ignore
-  invoice: PropTypes.object.isRequired
+  invoice: PropTypes.object.isRequired,
 };

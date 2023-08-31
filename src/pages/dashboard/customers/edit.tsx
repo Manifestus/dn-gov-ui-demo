@@ -16,13 +16,12 @@ import { Seo } from "src/components/seo";
 import { useMounted } from "src/hooks/use-mounted";
 import { usePageView } from "src/hooks/use-page-view";
 import { paths } from "src/paths";
-import { CustomerEditForm } from "src/sections/dashboard/customer/customer-edit-form";
 import type { Customer } from "src/types/customer";
 import type { Page as PageType } from "src/types/page";
-import { getInitials } from "src/utils/get-initials";
 import { t } from "i18next";
 import { tokens } from "src/locales/tokens";
 import { useLocation } from "react-router";
+import { CustomerAddForm } from "src/sections/dashboard/customer/customer-add-form";
 
 const useCustomer = (): Customer | null => {
   const isMounted = useMounted();
@@ -54,7 +53,12 @@ const useCustomer = (): Customer | null => {
 const Page: PageType = () => {
   const { state } = useLocation();
   const { customer } = state;
+  let cx: Customer = { id: "", name: "", email: "", phone: "", municipality: "", address: "", address2: "", country: "", user_cnr_id: ""};
   usePageView();
+
+  if (customer) {
+    cx = customer;
+  }
 
   if (!customer) {
     return null;
@@ -113,7 +117,7 @@ const Page: PageType = () => {
                 </Stack>
               </Stack>
             </Stack>
-            <CustomerEditForm customer={customer} />
+            <CustomerAddForm user={cx} />
           </Stack>
         </Container>
       </Box>
